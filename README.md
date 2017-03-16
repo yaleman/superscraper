@@ -19,4 +19,3 @@ config.py's contents should be as follows:
 | KEYFILE_NAME | str | the json filename you get from google devtools |
 | SPREADSHEET_NAME | str | the name of the spreadsheet in your google account, in the case of duplicate spreadsheet names, the "first" will be used. |
 | WORKSHEET_INDEX | int | the nth worksheet in the file - starts at 0 |
-

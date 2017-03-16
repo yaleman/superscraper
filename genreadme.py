@@ -1,7 +1,8 @@
 #!venv/bin/python3
-
+""" updates README.md from the script's docstring """
 
 import superscraper
 
-print(superscraper.__doc__)
+with open('README.md', 'w') as fh:
+    fh.write(superscraper.__doc__)
 
