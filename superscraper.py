@@ -38,6 +38,8 @@ QSUPER_URL = "https://qsuper.qld.gov.au/performance/unit-prices/"
 
 GOOGLE_CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name(KEYFILE_NAME, ['https://spreadsheets.google.com/feeds'])
 
+DEBUG = False
+
 def main():
     PAGE = requests.get(QSUPER_URL)
     # parse the HTML
@@ -51,10 +53,10 @@ def main():
         GOOGLE_OBJECT = gspread.authorize(GOOGLE_CREDENTIALS)
         # open the worksheet
         worksheet = GOOGLE_OBJECT.open(SPREADSHEET_NAME).get_worksheet(WORKSHEET_INDEX)
-        print("Opened SuperUnitPrices Spreadsheet, pulling records...",)
+        if DEBUG: print("Opened SuperUnitPrices Spreadsheet, pulling records...",)
         RECORDS = worksheet.get_all_records(empty2zero=False, head=1, default_blank='')
         VALIDROWS = [record for record in RECORDS if record['Date'] != ""]
-        print("done.")
+        if DEBUG: print("done.")
 
         # filter out the dates from the spreadsheet
         DATES_IN_WORKSHEET = [row['Date'] for row in VALIDROWS]
@@ -76,16 +78,16 @@ def main():
                 else:
                     # don't have data for this one.
                     newrow = (dateval.strftime('%d/%m/%Y'), val, '')
-                    print("Adding new row: {}".format(newrow))
+                    if DEBUG: print("Adding new row: {}".format(newrow))
                     worksheet.append_row(newrow)
                     rows_added += 1
     else:
-        print("Couldn't pull unit prices from {}".format(QSUPER_URL))
+        if DEBUG: print("Couldn't pull unit prices from {}".format(QSUPER_URL))
 
     if rows_added:
-        print("Added {} new data points".format(rows_added))
+        if DEBUG: print("Added {} new data points".format(rows_added))
     else:
-        print("No new data.")
+        if DEBUG: print("No new data.")
 
 if __name__ == '__main__':
     main()
